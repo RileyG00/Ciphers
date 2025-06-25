@@ -281,9 +281,7 @@ public class Griffinere
         string encryptedString = this.EncryptString(plainText);
 
         string response = string.Concat(stringToFront, encryptedString, stringToBack);
-        
-        Console.WriteLine(response);
-            
+                    
         return response;
     }
 
@@ -310,8 +308,6 @@ public class Griffinere
         }
 
         string response = string.Join(" ", result);
-        
-        Console.WriteLine(response);
         
         return response;
     }

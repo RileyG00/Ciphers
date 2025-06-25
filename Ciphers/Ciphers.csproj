@@ -1,24 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-   <PropertyGroup>
-      <OutputType>Exe</OutputType>
-      <TargetFramework>net9.0</TargetFramework>
-      <ImplicitUsings>enable</ImplicitUsings>
-      <Nullable>enable</Nullable>
-      <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-   </PropertyGroup>
-   <PropertyGroup>
-      <TargetFramework>net8.0</TargetFramework>
-      <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-      <Version>1.0.0</Version>
-      <Authors>Riley Griffin</Authors>
-      <Company>Riley Griffin</Company>
-      <Description>Griffinere cipher encryption and decryption library.</Description>
-      <PackageId>Griffinere</PackageId>
-      <RepositoryUrl>https://github.com/RileyG00/Ciphers</RepositoryUrl>
-      <PackageLicenseExpression>MIT</PackageLicenseExpression>
-   </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	</PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Version>1.0.1</Version>
+		<Authors>Riley Griffin</Authors>
+		<Company>Riley Griffin</Company>
+		<Description>Lightweight Vigenère-style cipher library for quick, zero-dependency text obfuscation in .NET.</Description>
+		<PackageId>SubstitutionCiphers</PackageId>
+		<RepositoryUrl>https://github.com/RileyG00/Ciphers</RepositoryUrl>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageTags>ciphers;cipher;cryptography;encryption;security;griffinere</PackageTags>
+	</PropertyGroup>
    <ItemGroup>
-      <PackageReference Include="xunit.assert" Version="2.9.2" />
-      <PackageReference Include="xunit.extensibility.core" Version="2.9.2" />
+	   <None Include="..\readme.md" Pack="true" PackagePath="\"/>
    </ItemGroup>
 </Project>
