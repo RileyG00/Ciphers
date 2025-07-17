@@ -6,7 +6,7 @@ The **Griffinere** cipher is a custom encryption algorithm in C# designed for re
 
 ## 📦 Installation
 
-Clone this repository or copy the `Griffinere.cs` file into your .NET project.
+Copy the `Griffinere.cs` file into your .NET project or install from the Nuget Library: ```dotnet add package SubstitutionCiphers```
 
 ```
 https://github.com/RileyG00/Ciphers
@@ -81,7 +81,6 @@ string decrypted = cipher.DecryptString(encrypted);
 | Alphabet contains .      | ArgumentException     |
 | Alphabet has duplicate characters      | ArgumentException     |
 | Key contains characters not in alphabet      | ArgumentException     |
-| Encrypting empty/null text      | ArgumentNullException     |
 | Specifying minimum length < 1      | ArgumentOutOfRangeException     |
 
 

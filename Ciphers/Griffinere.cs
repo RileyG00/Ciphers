@@ -155,16 +155,6 @@ public class Griffinere
         return base64String.ToCharArray();
     }
     
-    // private static string ToBase64String(string text)
-    // {
-    //     ArgumentNullException.ThrowIfNullOrWhiteSpace(text);
-    //     
-    //     byte[] bytes = Encoding.UTF8.GetBytes(text);
-    //     string base64String = Convert.ToBase64String(bytes).Replace("=", string.Empty);
-    //
-    //     return base64String;
-    // }
-    
     private static string FromBase64CharArray(char[] charArray)
     {
         ArgumentOutOfRangeException.ThrowIfZero(charArray.Length);
@@ -191,7 +181,7 @@ public class Griffinere
     {
         if (string.IsNullOrWhiteSpace(plainText))
         {
-            throw new ArgumentNullException(nameof(plainText));
+            return "";
         }
         
         List<string> result = new();
@@ -254,8 +244,8 @@ public class Griffinere
             {
                 if (i < charArrayLength)
                 {
-                    stringToBack += charArray.Reverse().ToArray()[i];
-                    
+                    stringToBack += charArray[charArray.Length - 1 - i];
+                   
                     addedToBack++;
                 }
                 else
@@ -268,7 +258,12 @@ public class Griffinere
         
         if (!string.IsNullOrWhiteSpace(stringToFront))
         {
-            string reversedString = string.Join("",stringToFront.ToCharArray().Reverse().ToArray());
+            string reversedString = string.Create(stringToFront.Length, stringToFront, (span, str) =>
+            {
+                str.AsSpan().CopyTo(span);
+                span.Reverse();
+            });
+
             
             stringToFront = this.EncryptString(reversedString) + ".";
         }
@@ -288,6 +283,11 @@ public class Griffinere
     
     public string DecryptString(string cipherText)
     {
+        if (string.IsNullOrWhiteSpace(cipherText))
+        {
+            return string.Empty;
+        }
+
         List<string> result = new();
 
         if (cipherText.Contains('.'))
