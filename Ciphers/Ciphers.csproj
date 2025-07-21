@@ -10,7 +10,7 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>1.1.0</Version>
+		<Version>1.1.1</Version>
 		<Authors>Riley Griffin</Authors>
 		<Company>Riley Griffin</Company>
 		<Description>Lightweight Vigenère-style cipher library for quick, zero-dependency text obfuscation in .NET.</Description>

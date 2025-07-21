@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Reflection.Metadata.Ecma335;
+using System.Text;
 
 namespace Ciphers;
 
@@ -181,13 +182,19 @@ public class Griffinere
     {
         if (string.IsNullOrWhiteSpace(plainText))
         {
-            return "";
+            return string.Empty;
         }
         
         List<string> result = new();
 
         foreach (string segment in plainText.Split(' '))
         {
+            if (segment == "")
+            {
+				result.Add(segment);
+                continue;
+			}
+
             char[] segmentChars = ToBase64CharArray(segment);
             char[] key = this.GetKey(segmentChars);
 
@@ -202,12 +209,12 @@ public class Griffinere
 
     public string EncryptString(string plainText, int minimumResponseLength)
     {
-        if (string.IsNullOrWhiteSpace(plainText))
-        {
-            throw new ArgumentNullException(nameof(plainText));
-        }
-        
-        if(minimumResponseLength < 1)
+		if (string.IsNullOrWhiteSpace(plainText))
+		{
+			return string.Empty;
+		}
+
+		if (minimumResponseLength < 1)
         {
             throw new ArgumentOutOfRangeException(nameof(minimumResponseLength), "Minimum response length must be greater than zero.");
         }
@@ -297,7 +304,13 @@ public class Griffinere
 
         foreach (string segment in cipherText.Split(' '))
         {
-            //char[] segmentChars = FromBase64String(segment);
+            if (segment == string.Empty)
+            {
+                result.Add(string.Empty);
+                continue;
+            }
+            
+
             char[] segmentChars = segment.ToCharArray();
             char[] key = this.GetKey(segmentChars);
 

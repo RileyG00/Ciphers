@@ -77,8 +77,32 @@ namespace Tests
             
             Assert.Equal(originalText, decrypted);
         }
-        
-        [Fact]
+
+		[Fact]
+		public void EncryptString_WithEscapedCharacters_ShouldReturnOriginalText()
+		{
+			Griffinere cipher = new("EuMchtXtJFKhA5H8fGduYPXQEcZJKEAe");
+
+			const string originalText = "Testing\nSpecial\tCharacters";
+			string encrypted = cipher.EncryptString(originalText);
+			string decrypted = cipher.DecryptString(encrypted);
+
+			Assert.Equal(originalText, decrypted);
+		}
+
+		[Fact]
+		public void EncryptString_WithDoubleSpaceCharacter_ShouldReturnOriginalText()
+		{
+			Griffinere cipher = new("dHiNt8C8JY1RhZ26mtYCHByr0WzzfTLm");
+
+			const string originalText = "Testing  Double   Triple Space";
+			string encrypted = cipher.EncryptString(originalText);
+			string decrypted = cipher.DecryptString(encrypted);
+
+			Assert.Equal(originalText, decrypted);
+		}
+
+		[Fact]
         public void Constructor_WithInvalidAlphabet_ShouldThrow()
         {
             const string invalidAlphabet = "abc.defghijklmf"; // contains '.'

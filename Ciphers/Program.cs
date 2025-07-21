@@ -1,12 +1,18 @@
 ﻿using Ciphers;
 
-const string key = "3Gg0V6Ld2ey0pRNaukgbTqAjimmZFK2M";
-const string plainText = "1000";
+const string key = "dHiNt8C8JY1RhZ26mtYCHByr0WzzfTLm";
+const string plainText = "BEGIN:VCARD\nVERSION:3.0\nFN:Riley  Griffin\nN:Griffin;Riley;;;\nORG:\nTITLE:\nTEL;TYPE=work,voice:\nEMAIL;TYPE=internet:\nURL:\nBDAY:2025-05-15\nEND:VCARD";
+//const string plainText = "Testing  Double   Triple Space";
+
 
 Griffinere griffinere = new(key);
 
-Console.WriteLine(griffinere.EncryptString(plainText, 12));
 
+string encrypted = griffinere.EncryptString(plainText);
+string decrypted = griffinere.DecryptString(encrypted);
+
+Console.WriteLine(encrypted);
+Console.WriteLine(decrypted);
 
 
 
