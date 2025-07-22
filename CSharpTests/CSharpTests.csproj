@@ -15,11 +15,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Using Include="Xunit" />
+      <ProjectReference Include="..\CSharpCiphers\CSharpCiphers.csproj" />
     </ItemGroup>
 
-
     <ItemGroup>
-      <ProjectReference Include="..\Ciphers\CSharpCiphers.csproj" />
+        <Using Include="Xunit" />
     </ItemGroup>
 </Project>
