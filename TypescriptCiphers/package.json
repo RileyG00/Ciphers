@@ -3,13 +3,21 @@
 	"version": "1.0.0",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
-	"files": [ "dist" ],
+	"files": [
+		"dist"
+	],
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
+		"test": "vitest",
 		"build": "tsc --build",
 		"clean": "tsc --build --clean"
 	},
-	"keywords": [ "cipher", "encryption", "typescript", "substitution", "griffinere" ],
+	"keywords": [
+		"cipher",
+		"encryption",
+		"typescript",
+		"substitution",
+		"griffinere"
+	],
 	"author": "Your Name",
 	"license": "MIT",
 	"type": "module",
@@ -17,6 +25,7 @@
 	"devDependencies": {
 		"@types/node": "^24.1.0",
 		"eslint": "^9.31.0",
-		"typescript": "^5.8.3"
+		"typescript": "^5.8.3",
+		"vitest": "^3.2.4"
 	}
 }

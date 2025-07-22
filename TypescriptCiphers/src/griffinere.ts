@@ -1,4 +1,4 @@
-// src/griffinere.ts
+import { Buffer } from "buffer";
 
 export class Griffinere {
     private readonly alphabet: string[];
