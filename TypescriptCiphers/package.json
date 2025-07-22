@@ -1,0 +1,37 @@
+{
+	"name": "substitution-ciphers",
+	"version": "1.0.1",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"readme": "./readme.md",
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"test": "vitest",
+		"build": "tsc --build",
+		"clean": "tsc --build --clean",
+		"prepublishOnly": "npm run build"
+	},
+	"keywords": [
+		"cipher",
+		"encryption",
+		"typescript",
+		"substitution",
+		"griffinere"
+	],
+	"exports": {
+		"./griffinere": "./dist/griffinere.js",
+		".": "./dist/index.js"
+	},
+	"author": "Riley Griffin",
+	"license": "MIT",
+	"type": "module",
+	"description": "The Griffinere cipher is a custom encryption algorithm in Typescript designed for reversible, base64-normalized encryption using a repeating key. Inspired by the Vigenère cipher, it adds configurable alphabet support, input validation, and padding-based encryption length enforcement.",
+	"devDependencies": {
+		"@types/node": "^24.1.0",
+		"eslint": "^9.31.0",
+		"typescript": "^5.8.3",
+		"vitest": "^3.2.4"
+	}
+}
