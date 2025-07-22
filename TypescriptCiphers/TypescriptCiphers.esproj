@@ -1,1 +1,8 @@
-<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.2752196" />
+﻿<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.2752196">
+	<PropertyGroup>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Include="readme.md" Pack="true" PackagePath="\"/>
+	</ItemGroup>
+</Project>

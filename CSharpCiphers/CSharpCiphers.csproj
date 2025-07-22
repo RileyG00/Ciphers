@@ -21,6 +21,6 @@
 		<PackageTags>ciphers;cipher;cryptography;encryption;security;griffinere</PackageTags>
 	</PropertyGroup>
    <ItemGroup>
-	   <None Include="..\readme.md" Pack="true" PackagePath="\"/>
+	   <None Include="readme.md" Pack="true" PackagePath="\"/>
    </ItemGroup>
 </Project>
