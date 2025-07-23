@@ -1,1 +1,0 @@
-export { Griffinere } from "./griffinere";
