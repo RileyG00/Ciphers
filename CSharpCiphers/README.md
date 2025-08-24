@@ -56,16 +56,18 @@ Griffinere cipher = new(customAlphabet, key);
 
 2.1: Encrypt a String
 ```
+Griffinere cipher = new("nGOvtaRXyMEtCOO9");
 string plainText = "Hello World 123";
 string encrypted = cipher.EncryptString(plainText);
-//outputs: LUKsbK8 OK9ybKJ FC3z
+//outputs: sjnyIdM trIKZ3v 0m7m
 ```
 
 2.2: Encrypt a String with Minimum Length
 ```
+Griffinere cipher = new("nGOvtaRXyMEtCOO9");
 const string plainText = "Hello World 123";
 string encrypted = cipher.EncryptString(plainText, minimumResponseLength: 24);
-//outputs: cm9JbAxsIJg.LUKsbK8 OK9ybKJ FC3z.Fw
+//outputs: w5WFeRLvJ1q.sjnyIdM trIKZ3v 0m7m.c
 ```
 
 3.1: Decrypt a String
@@ -82,6 +84,8 @@ string decrypted = cipher.DecryptString(encrypted);
 | ------------- |:-------------:|
 | Alphabet contains .      | ArgumentException     |
 | Alphabet has duplicate characters      | ArgumentException     |
+| Alphabet does not contain at least 3 unique characters      | ArgumentException     |
+| Key does not contain at least 3 unique characters      | ArgumentException     |
 | Key contains characters not in alphabet      | ArgumentException     |
 | Specifying minimum length < 1      | ArgumentOutOfRangeException     |
 

@@ -10,7 +10,7 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>1.1.1</Version>
+		<Version>2.0.0</Version>
 		<Authors>Riley Griffin</Authors>
 		<Company>Riley Griffin</Company>
 		<Description>Lightweight Vigenère-style cipher library for quick, zero-dependency text obfuscation in .NET.</Description>
@@ -21,6 +21,6 @@
 		<PackageTags>ciphers;cipher;cryptography;encryption;security;griffinere</PackageTags>
 	</PropertyGroup>
    <ItemGroup>
-	   <None Include="readme.md" Pack="true" PackagePath="\"/>
+	   <None Include="readme.md" Pack="true" PackagePath="\" />
    </ItemGroup>
 </Project>

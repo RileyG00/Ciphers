@@ -17,7 +17,47 @@ namespace Tests
             Assert.Equal(plainText, decrypted);
         }
 
-        [Fact]
+		[Fact]
+		public void EncryptAndDecrypt_ShouldReturnDifferentText()
+		{
+			const string key = "emz";
+			const string plainText = "Test";
+			const string plainText2 = "Text";
+			Griffinere cipher = new(key);
+
+			string encrypted = cipher.EncryptString(plainText);
+			string encrypted2 = cipher.EncryptString(plainText2);
+
+			Assert.NotEqual(encrypted, encrypted2);
+		}
+
+		[Fact]
+		public void EncryptAndDecrypt_ShouldReturnNumbersInEncryption()
+		{
+            const string alphabet = "123";
+			const string key = "123";
+			const string plainText = "The sunset looks lovely.";
+			Griffinere cipher = new(alphabet,key);
+
+			string encrypted = cipher.EncryptString(plainText);
+
+			Assert.Contains("1",encrypted);
+		}
+
+		[Fact]
+		public void EncryptAndDecrypt_ShouldReturnNumbersInEncryption2()
+		{
+			const string alphabet = "abcdefg123456";
+			const string key = "123";
+			const string plainText = "The sunset looks lovely.";
+			Griffinere cipher = new(alphabet, key);
+
+			string encrypted = cipher.EncryptString(plainText);
+
+			Assert.Contains("3", encrypted);
+		}
+
+		[Fact]
         public void EncryptAndDecrypt_WithCustomAlphabet_ShouldReturnOriginalText()
         {
             const string key = "N3bhd1u6gh6Uh88H083envHwuUSec72i";
@@ -121,8 +161,28 @@ namespace Tests
             ArgumentException ex = Assert.Throws<ArgumentException>(() => new Griffinere(invalidAlphabet, key));
             Assert.Contains("Duplicate character", ex.Message);
         }
-        
-        [Fact]
+
+		[Fact]
+		public void Constructor_WithTooShortOfAnAlphabet_ShouldThrow()
+		{
+			const string invalidAlphabet = "a";
+			const string key = "a";
+
+			ArgumentException ex = Assert.Throws<ArgumentException>(() => new Griffinere(invalidAlphabet, key));
+			Assert.Contains("Alphabet must contain at least 3 unique characters", ex.Message);
+		}
+
+		[Fact]
+		public void Constructor_WithTooShortOfAKey_ShouldThrow()
+		{
+			const string invalidAlphabet = "abcdefghi123";
+			const string key = "1";
+
+			ArgumentException ex = Assert.Throws<ArgumentException>(() => new Griffinere(invalidAlphabet, key));
+			Assert.Contains("Key must be at least 3 characters long", ex.Message);
+		}
+
+		[Fact]
         public void DecryptString_WithDotPrefix_ShouldStillReturnPlaintext()
         {
             const string key = "dShHPpUQTihcn7ju1wjYTAD1dvbrPKdT";
@@ -144,6 +204,7 @@ namespace Tests
             
             Assert.Throws<ArgumentOutOfRangeException>(() => cipher.EncryptString(plainText, 0));
         }
+
     }
 }
 
