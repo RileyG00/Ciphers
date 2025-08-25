@@ -1,6 +1,6 @@
 {
 	"name": "substitution-ciphers",
-	"version": "1.1.0",
+	"version": "2.0.0",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"readme": "./readme.md",
@@ -18,7 +18,9 @@
 		"encryption",
 		"typescript",
 		"substitution",
-		"griffinere"
+		"griffinere",
+		"obfuscation",
+		"obfuscator"
 	],
 	"exports": {
 		"./griffinere": "./dist/griffinere.js",
@@ -27,6 +29,12 @@
 	"author": "Riley Griffin",
 	"license": "MIT",
 	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/RileyG00/Ciphers",
+		"directory": "TypescriptCiphers"
+	},
+	"homepage": "https://dataformatters.netlify.app/ciphers/",
 	"description": "The Griffinere cipher is a custom encryption algorithm in Typescript designed for reversible, base64-normalized encryption using a repeating key. Inspired by the Vigenère cipher, it adds configurable alphabet support, input validation, and padding-based encryption length enforcement.",
 	"devDependencies": {
 		"@types/node": "^24.1.0",

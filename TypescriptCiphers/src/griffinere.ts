@@ -1,193 +1,317 @@
-// Griffinere cipher – browser‑safe implementation
-// Removed all Node‑only features (no Buffer import)
-// Uses Web APIs: TextEncoder/TextDecoder and atob/btoa
-
 export class Griffinere {
-    private readonly alphabet: string[];
-    private readonly alphabetPositionMap: Map<string, number>;
-    private readonly key: string[];
-    private readonly alphabetLength: number;
+	private readonly alphabet: string[];
+	private readonly alphabetPositionMap: Map<string, number>;
+	private readonly key: string[];
+	private readonly alphabetLength: number;
 
-    constructor(key: string, alphabet?: string) {
-        const defaultAlphabet: string = Griffinere.getDefaultAlphabet();
-        const validatedAlphabet: string[] = Griffinere.validateAlphabet(alphabet ?? defaultAlphabet, key);
+	constructor(key: string, alphabet?: string) {
+		const defaultAlphabet: string = Griffinere.getDefaultAlphabet();
+		const validatedAlphabet: string[] = Griffinere.validateAlphabet(
+			alphabet ?? defaultAlphabet,
+			key,
+		);
 
-        this.alphabet = validatedAlphabet;
-        this.alphabetPositionMap = Griffinere.createAlphabetPositionMap(validatedAlphabet);
-        this.key = key.split('');
-        this.alphabetLength = validatedAlphabet.length;
-    }
+		this.alphabet = validatedAlphabet;
+		this.alphabetPositionMap =
+			Griffinere.createAlphabetPositionMap(validatedAlphabet);
+		this.key = Griffinere.validateKey(key);
+		this.alphabetLength = validatedAlphabet.length;
+	}
 
-    private static getDefaultAlphabet(): string {
-        return 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    }
+	private static getDefaultAlphabet(): string {
+		return "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	}
 
-    private static validateAlphabet(alphabet: string, key: string): string[] {
-        if (alphabet.includes('.')) {
-            throw new Error("Alphabet must not contain '.'");
-        }
+	private static validateKey = (key: string): string[] => {
+		if (key.length < 3) {
+			throw new Error("Key must be at least 3 characters long.");
+		} else {
+			return key.split("");
+		}
+	};
 
-        const seen: Set<string> = new Set();
-        const uniqueList: string[] = [];
+	private static validateAlphabet = (
+		alphabet: string,
+		key: string,
+	): string[] => {
+		if (alphabet.includes(".")) {
+			throw new Error("Alphabet must not contain '.'");
+		}
 
-        for (const c of alphabet) {
-            if (seen.has(c)) {
-                throw new Error(`Duplicate character '${c}' in provided alphabet.`);
-            }
-            seen.add(c);
-            uniqueList.push(c);
-        }
+		const seen: Set<string> = new Set();
+		const uniqueList: string[] = [];
 
-        for (const c of key) {
-            if (!uniqueList.includes(c)) {
-                throw new Error(`Alphabet does not contain the character '${c}' supplied in the key.`);
-            }
-        }
+		for (const c of alphabet) {
+			if (seen.has(c)) {
+				throw new Error(
+					`Duplicate character '${c}' in provided alphabet.`,
+				);
+			}
+			seen.add(c);
+			uniqueList.push(c);
+		}
 
-        return uniqueList;
-    }
+		if (uniqueList.length < 3) {
+			throw new Error(
+				"Alphabet must contain at least 3 unique characters.",
+			);
+		}
 
-    private static createAlphabetPositionMap(alphabet: string[]): Map<string, number> {
-        const map: Map<string, number> = new Map();
-        alphabet.forEach((char: string, index: number): void => {
-            map.set(char, index);
-        });
-        return map;
-    }
+		for (const c of key) {
+			if (!uniqueList.includes(c)) {
+				throw new Error(
+					`Alphabet does not contain the character '${c}' supplied in the key.`,
+				);
+			}
+		}
 
-    private getKey(text: string[]): string[] {
-        if (text.length === 0) throw new Error('Text cannot be empty');
+		return uniqueList;
+	};
 
-        const repeatedKey: string[] = [];
-        while (repeatedKey.length < text.length) {
-            repeatedKey.push(...this.key);
-        }
-        return repeatedKey.slice(0, text.length);
-    }
+	private static createAlphabetPositionMap(
+		alphabet: string[],
+	): Map<string, number> {
+		const map: Map<string, number> = new Map();
+		alphabet.forEach((char: string, index: number): void => {
+			map.set(char, index);
+		});
+		return map;
+	}
 
-    private shiftCharacterPositive(keyChar: string, textChar: string): string {
-        const keyPos: number | undefined = this.alphabetPositionMap.get(keyChar);
-        const textPos: number | undefined = this.alphabetPositionMap.get(textChar);
+	private getKey(text: string[]): string[] {
+		if (text.length === 0) throw new Error("Text cannot be empty");
 
-        if (keyPos === undefined || textPos === undefined) return textChar;
+		const repeatedKey: string[] = [];
+		while (repeatedKey.length < text.length) {
+			repeatedKey.push(...this.key);
+		}
+		return repeatedKey.slice(0, text.length);
+	}
 
-        const shiftedIndex: number = (keyPos + textPos) % this.alphabetLength;
-        return this.alphabet[shiftedIndex];
-    }
+	private shiftCharacterPositive(keyChar: string, textChar: string): string {
+		const keyPos: number | undefined =
+			this.alphabetPositionMap.get(keyChar);
+		const textPos: number | undefined =
+			this.alphabetPositionMap.get(textChar);
 
-    private shiftCharacterNegative(keyChar: string, textChar: string): string {
-        const keyPos: number | undefined = this.alphabetPositionMap.get(keyChar);
-        const textPos: number | undefined = this.alphabetPositionMap.get(textChar);
+		if (keyPos === undefined || textPos === undefined) return textChar; // shouldn't happen with alphabet-only input
 
-        if (keyPos === undefined || textPos === undefined) return textChar;
+		const shiftedIndex: number = (keyPos + textPos) % this.alphabetLength;
+		return this.alphabet[shiftedIndex];
+	}
 
-        const shiftedIndex: number = (textPos - keyPos + this.alphabetLength) % this.alphabetLength;
-        return this.alphabet[shiftedIndex];
-    }
+	private shiftCharacterNegative(keyChar: string, textChar: string): string {
+		const keyPos: number | undefined =
+			this.alphabetPositionMap.get(keyChar);
+		const textPos: number | undefined =
+			this.alphabetPositionMap.get(textChar);
 
-    // --- Base64 helpers using Web APIs (TextEncoder/TextDecoder, atob/btoa) ---
+		if (keyPos === undefined || textPos === undefined) return textChar; // shouldn't happen with alphabet-only input
 
-    private static encodeBase64(text: string): string {
-        const bytes: Uint8Array = new TextEncoder().encode(text);
-        let binary: string = '';
-        bytes.forEach((b: number): void => { binary += String.fromCharCode(b); });
-        return btoa(binary);
-    }
+		const shiftedIndex: number =
+			(textPos - keyPos + this.alphabetLength) % this.alphabetLength;
+		return this.alphabet[shiftedIndex];
+	}
 
-    private static decodeBase64(base64: string): string {
-        const binary: string = atob(base64);
-        const bytes: Uint8Array = Uint8Array.from(binary, (c: string): number => c.charCodeAt(0));
-        return new TextDecoder().decode(bytes);
-    }
+	// -------------------------
+	// Alphabet-only Base-N codec
+	// -------------------------
 
-    private static toBase64CharArray(text: string): string[] {
-        if (!text.trim()) throw new Error('Text cannot be empty');
-        const base64: string = Griffinere.encodeBase64(text).replace(/=/g, '');
-        return base64.split('');
-    }
+	private static utf8ToBytes(text: string): Uint8Array {
+		return new TextEncoder().encode(text);
+	}
 
-    private static fromBase64CharArray(chars: string[]): string {
-        if (chars.length === 0) throw new Error('Base64 input is empty');
+	private static bytesToUtf8(bytes: Uint8Array): string {
+		return new TextDecoder().decode(bytes);
+	}
 
-        let base64: string = chars.join('');
-        while (base64.length % 4 !== 0) base64 += '='; // restore padding
+	/**
+	 * Encode arbitrary bytes into the configured alphabet (base-N).
+	 * Preserves leading zero bytes by prefixing alphabet[0] for each leading zero.
+	 */
+	private encodeBytesToAlphabet(bytes: Uint8Array): string {
+		if (bytes.length === 0) return "";
 
-        return Griffinere.decodeBase64(base64);
-    }
+		// Count leading zero bytes
+		let zeroCount = 0;
+		while (zeroCount < bytes.length && bytes[zeroCount] === 0) zeroCount++;
 
-    // --- Public API ---
+		// Convert bytes (big-endian) to BigInt
+		let value = 0n;
+		for (const b of bytes) {
+			value = (value << 8n) + BigInt(b);
+		}
 
-    public encryptString(plainText: string): string {
-        if (!plainText.trim()) return '';
+		const base = BigInt(this.alphabetLength);
 
-        const result: string[] = [];
+		if (value === 0n) {
+			// All zeros: represent at least one zero digit
+			return this.alphabet[0].repeat(Math.max(1, zeroCount));
+		}
 
-        for (const segment of plainText.split(' ')) {
-            if (!segment) {
-                result.push(segment);
-                continue;
-            }
+		const digits: string[] = [];
+		while (value > 0n) {
+			const rem = Number(value % base);
+			digits.push(this.alphabet[rem]);
+			value = value / base;
+		}
 
-            const chars: string[] = Griffinere.toBase64CharArray(segment);
-            const key: string[] = this.getKey(chars);
-            const encrypted: string[] = chars.map((c: string, i: number): string => this.shiftCharacterPositive(key[i], c));
-            result.push(encrypted.join(''));
-        }
+		// Add prefix zeros and reverse to big-endian digit order
+		const zeroPrefix = this.alphabet[0].repeat(zeroCount);
+		return zeroPrefix + digits.reverse().join("");
+	}
 
-        return result.join(' ');
-    }
+	/**
+	 * Decode text composed only of alphabet characters back to bytes.
+	 * Restores leading zeros encoded as prefix alphabet[0].
+	 */
+	private decodeAlphabetToBytes(text: string): Uint8Array {
+		if (text.length === 0) return new Uint8Array(0);
 
-    public encryptStringWithMinimumLength(plainText: string, minimumLength: number): string {
-        if (!plainText.trim()) return '';
-        if (minimumLength < 1) throw new Error('Minimum response length must be greater than zero.');
+		// Count prefix zeros (alphabet[0])
+		let zeroPrefix = 0;
+		while (
+			zeroPrefix < text.length &&
+			text[zeroPrefix] === this.alphabet[0]
+		) {
+			zeroPrefix++;
+		}
 
-        let front: string = '';
-        let back: string = '';
+		const base = BigInt(this.alphabetLength);
+		let value = 0n;
+		for (const c of text) {
+			const digit = this.alphabetPositionMap.get(c);
+			if (digit === undefined) {
+				throw new Error(
+					`Cipher text contains character '${c}' not in the alphabet.`,
+				);
+			}
+			value = value * base + BigInt(digit);
+		}
 
-        if (plainText.length < minimumLength) {
-            const stripped: string[] = plainText.replace(/ /g, '').split('');
-            const toAdd: number = minimumLength - plainText.length;
-            const frontCount: number = Math.ceil(toAdd / 1.25);
-            const backCount: number = toAdd - frontCount;
+		// Convert BigInt to big-endian bytes
+		const bytesRev: number[] = [];
+		while (value > 0n) {
+			bytesRev.push(Number(value & 0xffn));
+			value >>= 8n;
+		}
+		const core = Uint8Array.from(bytesRev.reverse());
 
-            for (let i = 0; i < frontCount; i++) {
-                front += stripped[i % stripped.length] ?? '';
-            }
-            for (let i = 0; i < backCount; i++) {
-                back += stripped[stripped.length - 1 - (i % stripped.length)] ?? '';
-            }
-        }
+		// Restore encoded leading zeros
+		if (zeroPrefix > 0) {
+			const out = new Uint8Array(zeroPrefix + core.length);
+			// first zeroPrefix bytes are already zero
+			out.set(core, zeroPrefix);
+			return out;
+		}
 
-        const reversedFront: string = front.split('').reverse().join('');
-        const frontEncrypted: string = front ? `${this.encryptString(reversedFront)}.` : '';
-        const backEncrypted: string = back ? `.${this.encryptString(back)}` : '';
-        const mainEncrypted: string = this.encryptString(plainText);
+		return core;
+	}
 
-        return `${frontEncrypted}${mainEncrypted}${backEncrypted}`;
-    }
+	private toAlphabetCharArray(text: string): string[] {
+		if (!text.trim()) throw new Error("Text cannot be empty");
+		const bytes: Uint8Array = Griffinere.utf8ToBytes(text);
+		const encoded: string = this.encodeBytesToAlphabet(bytes);
+		return encoded.split("");
+	}
 
-    public decryptString(cipherText: string): string {
-        if (!cipherText.trim()) return '';
+	private fromAlphabetCharArray(chars: string[]): string {
+		if (chars.length === 0) throw new Error("Encoded input is empty");
+		const text: string = chars.join("");
+		const bytes: Uint8Array = this.decodeAlphabetToBytes(text);
+		return Griffinere.bytesToUtf8(bytes);
+	}
 
-        if (cipherText.includes('.')) {
-            cipherText = cipherText.split('.')[1];
-        }
+	// --- Public API ---
 
-        const result: string[] = [];
+	public encryptString(plainText: string): string {
+		if (!plainText.trim()) return "";
 
-        for (const segment of cipherText.split(' ')) {
-            if (!segment) {
-                result.push('');
-                continue;
-            }
+		const result: string[] = [];
 
-            const chars: string[] = segment.split('');
-            const key: string[] = this.getKey(chars);
-            const decrypted: string[] = chars.map((c: string, i: number): string => this.shiftCharacterNegative(key[i], c));
-            const plain: string = Griffinere.fromBase64CharArray(decrypted);
-            result.push(plain);
-        }
+		for (const segment of plainText.split(" ")) {
+			if (!segment) {
+				result.push(segment);
+				continue;
+			}
 
-        return result.join(' ');
-    }
+			const chars: string[] = this.toAlphabetCharArray(segment);
+			const key: string[] = this.getKey(chars);
+			const encrypted: string[] = chars.map(
+				(c: string, i: number): string =>
+					this.shiftCharacterPositive(key[i], c),
+			);
+			result.push(encrypted.join(""));
+		}
+
+		return result.join(" ");
+	}
+
+	public encryptStringWithMinimumLength(
+		plainText: string,
+		minimumLength: number,
+	): string {
+		if (!plainText.trim()) return "";
+		if (minimumLength < 1)
+			throw new Error(
+				"Minimum response length must be greater than zero.",
+			);
+
+		let front = "";
+		let back = "";
+
+		if (plainText.length < minimumLength) {
+			const stripped: string[] = plainText.replace(/ /g, "").split("");
+			const toAdd: number = minimumLength - plainText.length;
+			const frontCount: number = Math.ceil(toAdd / 1.25);
+			const backCount: number = toAdd - frontCount;
+
+			for (let i = 0; i < frontCount; i++) {
+				front += stripped[i % stripped.length] ?? "";
+			}
+			for (let i = 0; i < backCount; i++) {
+				back +=
+					stripped[stripped.length - 1 - (i % stripped.length)] ?? "";
+			}
+		}
+
+		const reversedFront: string = front.split("").reverse().join("");
+		const frontEncrypted: string = front
+			? `${this.encryptString(reversedFront)}.`
+			: "";
+		const backEncrypted: string = back
+			? `.${this.encryptString(back)}`
+			: "";
+		const mainEncrypted: string = this.encryptString(plainText);
+
+		return `${frontEncrypted}${mainEncrypted}${backEncrypted}`;
+	}
+
+	public decryptString(cipherText: string): string {
+		if (!cipherText.trim()) return "";
+
+		if (cipherText.includes(".")) {
+			cipherText = cipherText.split(".")[1];
+		}
+
+		const result: string[] = [];
+
+		for (const segment of cipherText.split(" ")) {
+			if (!segment) {
+				result.push("");
+				continue;
+			}
+
+			const chars: string[] = segment.split("");
+			const key: string[] = this.getKey(chars);
+			const decrypted: string[] = chars.map(
+				(c: string, i: number): string =>
+					this.shiftCharacterNegative(key[i], c),
+			);
+			const plain: string = this.fromAlphabetCharArray(decrypted);
+			result.push(plain);
+		}
+
+		return result.join(" ");
+	}
 }
