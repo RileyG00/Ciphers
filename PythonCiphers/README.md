@@ -3,9 +3,9 @@
 The **Griffinere** cipher is a reversible, Base‑64‑normalised encryption algorithm implemented in pure **Python**.
 Inspired by the classic Vigenère cipher, it adds:
 
-* **Configurable alphabets** (use any character set you like)
-* **Input validation** for safer usage
-* **Padding‑based length enforcement** so encrypted strings meet a minimum length
+-   **Configurable alphabets** (use any character set you like)
+-   **Input validation** for safer usage
+-   **Padding‑based length enforcement** so encrypted strings meet a minimum length
 
 ---
 
@@ -25,11 +25,11 @@ from substitutionciphers import Griffinere
 
 ## ✨ Features
 
-* 🔐 Encrypts & decrypts alphanumeric or **custom‑alphabet** strings
-* 🧩 Define your **own alphabet** (emoji? Cyrillic? go ahead!)
-* 📏 Optional **minimum‑length** padding for fixed‑width ciphertext
-* ✅ Strong validation of both alphabet and key integrity
-* 🧪 Unit‑tested with **pytest**
+-   🔐 Encrypts & decrypts alphanumeric or **custom‑alphabet** strings
+-   🧩 Define your **own alphabet** (emoji? Cyrillic? go ahead!)
+-   📏 Optional **minimum‑length** padding for fixed‑width ciphertext
+-   ✅ Strong validation of both alphabet and key integrity
+-   🧪 Unit‑tested with **pytest**
 
 ---
 
@@ -98,6 +98,8 @@ assert decrypted == plain_text
 | ----------------------------------------------- | ------------ |
 | Alphabet contains `.`                           | `ValueError` |
 | Duplicate characters in alphabet                | `ValueError` |
+| Alphabet is fewer than 3 characters long        | `ValueError` |
+| Key is fewer than 3 characters long             | `ValueError` |
 | Key contains characters not present in alphabet | `ValueError` |
 | `minimum_response_length` < 1                   | `ValueError` |
 
